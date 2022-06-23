@@ -1,0 +1,48 @@
+package game;
+
+import processing.core.PApplet;
+
+public class Button {
+    private String text;
+    private int x,y,width, height, clickTimer = 0;
+
+    public Button(String text, int x, int y, int width, int height, boolean centered) {
+        this.text = text;
+        if (centered) {
+            this.x = x - width / 2;
+            this.y = y - height / 2;
+        } else {
+            this.x = x;
+            this.y = y;            
+        }
+        this.width = width;
+        this.height = height;
+    }
+
+    public boolean collision(int coordX, int coordY) {
+        boolean clicked = y < coordY && y + height > coordY && x < coordX && x + width > coordX;
+        if (clicked) {
+            clickTimer = 120;
+        }
+        return clicked;
+    }
+
+    public void draw(PApplet canvas) {
+        canvas.textSize((float)(height * 0.5));
+        canvas.color(0);
+        canvas.fill(0);
+        canvas.stroke(255);
+        canvas.rect(x, y, width, height);
+        canvas.fill(255);
+        if (clickTimer != 0) {
+            canvas.fill(100);
+            clickTimer--;
+        }
+        canvas.textAlign(PApplet.CENTER, PApplet.CENTER);
+        canvas.text(text, x + (width / 2), y + (height / 2));
+    }
+
+    public void setText(String text) {
+        this.text = text;
+    }
+}
