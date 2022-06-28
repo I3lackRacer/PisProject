@@ -10,22 +10,22 @@ public class App extends PApplet {
         PApplet.runSketch(new String[]{""}, new App());
     }
 
-    ArrayList<BlackPlayer> blackPlayers = new ArrayList<>();
-    ArrayList<WhitePlayer> whitePlayers = new ArrayList<>();
+    private Board board; 
     private Screen currentScreen = Screen.MENU;
-    private Button startGame2PlayerButton = new Button("2 Player", 250 , 400, 140, 50, true);
-    private Button startGameEasyButton = new Button("Bot Easy", 250 , 500, 140, 50, true);
-    private Button startGameHardButton = new Button("Bot Hard", 250 , 600, 140, 50, true);
+    private Button startGame2PlayerButton = new Button("2 Player", 200 , 100, 140, 50, true);
+    private Button startGameEasyButton = new Button("Bot Easy", 200 , 200, 140, 50, true);
+    private Button startGameHardButton = new Button("Bot Hard", 200 , 300, 140, 50, true);
     private GameMode gameMode = GameMode.TWOPLAYER;
-
+    private Player selected = null;
 
     @Override
     public void setup() {
+        board = new Board(new CheckersGame());
     }
 
     @Override
     public void settings() {
-        size(500, 700);
+        size(400, 400);
     }
 
     @Override
@@ -44,12 +44,7 @@ public class App extends PApplet {
             case GAME -> {
                 background(255);
                 drawGameField();
-                for (WhitePlayer whitePlayer : whitePlayers) {
-                    whitePlayer.draw(this);
-                }
-                for (BlackPlayer blackPlayer : blackPlayers) {
-                    blackPlayer.draw(this);
-                }
+                board.draw(this);
             }
             case GAMEOVER -> {
 
@@ -58,21 +53,14 @@ public class App extends PApplet {
     }
 
     private void setupNewGame() {
-        blackPlayers.clear();
-        whitePlayers.clear();
-        for (int x = 0; x < 3; x++) {
-            for (int y = 0; y < 5; y++) {
-                whitePlayers.add(new WhitePlayer(x, y));
-                blackPlayers.add(new BlackPlayer(x, 7-y));
-            }
-        }
+        board.newGame();
     }
 
     private void drawGameField() {
         boolean white = true;
         stroke(color(223,215,200));
-        for (int x = 0; x < 500; x+=50) {
-            for (int y = 0; y < 500; y+=50) {
+        for (int x = 0; x < 400; x+=50) {
+            for (int y = 0; y < 400; y+=50) {
                 if(white) fill(color(223,215,200));
                 else fill(color(101,56,24));
                 rect(x, y, 50, 50);
@@ -107,7 +95,14 @@ public class App extends PApplet {
                 }
             }
             case GAME -> {
-
+                int x = mouseX / 50;
+                int y = mouseY / 50;
+                if (selected != null && selected.getMoves().stream().anyMatch((move) -> {return move.xEnd() == x && move.yEnd() == y;})) {
+                    Move move = Move.of(selected.getX(), selected.getY(), x, y);
+                    board.play(move);
+                    selected = null;
+                } else
+                    selected = board.select(x,y);
             }
             case GAMEOVER -> {
 
