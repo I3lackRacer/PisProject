@@ -1,6 +1,6 @@
 package game;
 
-import java.util.ArrayList;
+import java.util.Optional;
 
 import processing.core.PApplet;
 
@@ -16,11 +16,13 @@ public class App extends PApplet {
     private Button startGameEasyButton = new Button("Bot Easy", 200 , 200, 140, 50, true);
     private Button startGameHardButton = new Button("Bot Hard", 200 , 300, 140, 50, true);
     private GameMode gameMode = GameMode.TWOPLAYER;
+    private boolean isWhiteTurn;
     private Player selected = null;
 
     @Override
     public void setup() {
         board = new Board(new CheckersGame());
+        isWhiteTurn = true;
     }
 
     @Override
@@ -98,11 +100,19 @@ public class App extends PApplet {
                 int x = mouseX / 50;
                 int y = mouseY / 50;
                 if (selected != null && selected.getMoves().stream().anyMatch((move) -> {return move.xEnd() == x && move.yEnd() == y;})) {
-                    Move move = Move.of(selected.getX(), selected.getY(), x, y);
-                    board.play(move);
+                    Optional<Move> move = selected.getMoves().stream().filter((m) -> {return m.xEnd() == x && m.yEnd() == y;}).findAny();
+                    if (move.isEmpty()) {
+                        return;
+                    }
+                    board.play(move.get());
                     selected = null;
-                } else
-                    selected = board.select(x,y);
+                    isWhiteTurn = !isWhiteTurn;
+                } else {
+                    Player p = board.getPlayer(x, y);
+                    if((p.getPlayerType() == PlayerType.WHITE && isWhiteTurn) || (p.getPlayerType() == PlayerType.BLACK && !isWhiteTurn)) {
+                        selected = board.select(x,y);
+                    }
+                } 
             }
             case GAMEOVER -> {
 

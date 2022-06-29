@@ -40,8 +40,10 @@ public class Board {
         p.move(move);
         gameField[move.xEnd()][move.yEnd()] = p;
         gameField[move.xStart()][move.yStart()] = null;
+        System.out.println(move.knockout());
         if (move.knockout()) {
             Location deadPlayerPos = backend.getKnockout(move);
+            assert deadPlayerPos != null : "This should not happen";
             gameField[deadPlayerPos.x()][deadPlayerPos.y()] = null;
             players.removeIf((player) -> {return player.getX() == deadPlayerPos.x() && player.getY() == deadPlayerPos.y();});
             backend.setField(deadPlayerPos.x(), deadPlayerPos.y(), null);
@@ -51,7 +53,7 @@ public class Board {
         selected = null;
     }
 
-    private Player getPlayer(int xStart, int yStart) {
+    public Player getPlayer(int xStart, int yStart) {
         return gameField[xStart][yStart];
     }
 

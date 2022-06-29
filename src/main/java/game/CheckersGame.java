@@ -102,7 +102,8 @@ public class CheckersGame implements Playable{
     public Location getKnockout(Move move) {
         int xDirection = move.xStart() > move.xEnd() ? -1 : 1;
         int yDirection = move.yStart() > move.yEnd() ? -1 : 1;
-        for(int offset = 1; offset < move.xEnd() - move.xStart(); offset++) {
+        for(int offset = 1; offset <  move.xStart() - move.xEnd(); offset++) {
+            System.out.println("X: " + move.xStart() + offset * xDirection + "Y: " + move.yStart() + offset * yDirection);
             if (field[move.xStart() + offset * xDirection][move.yStart() + offset * yDirection] != null) {
                 return new Location(move.xStart() + offset * xDirection, move.yStart() + offset * yDirection);
             }
