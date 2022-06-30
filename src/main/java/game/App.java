@@ -109,6 +109,11 @@ public class App extends PApplet {
                     isWhiteTurn = !isWhiteTurn;
                 } else {
                     Player p = board.getPlayer(x, y);
+                    if (p == null) {
+                        selected = null;
+                        board.deselect();
+                        return;
+                    }
                     if((p.getPlayerType() == PlayerType.WHITE && isWhiteTurn) || (p.getPlayerType() == PlayerType.BLACK && !isWhiteTurn)) {
                         selected = board.select(x,y);
                     }

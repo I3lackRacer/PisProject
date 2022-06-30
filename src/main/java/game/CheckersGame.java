@@ -2,9 +2,13 @@ package game;
 
 import java.util.ArrayList;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 public class CheckersGame implements Playable{
 
     PlayerType[][] field = new PlayerType[8][8];
+    private static final Logger logger = LogManager.getLogger(CheckersGame.class);
 
     public CheckersGame() {
         setupNewGame();
@@ -16,6 +20,7 @@ public class CheckersGame implements Playable{
                 field[x][y] = game.field[x][y];
             }
         }
+        logger.info("Backend generated new checkers game");
     }
 
     public CheckersGame copy(CheckersGame game) {
@@ -44,7 +49,7 @@ public class CheckersGame implements Playable{
                 if (corner == null) {
                     moves.add(Move.of(x, y, x - 1, y - 1));
                 }
-                if (isEnemy(type, x - 1, y - 1) && x > 1 && y > 2 && field[x - 2][y - 2] == null) {
+                if (isEnemy(type, x - 1, y - 1) && x > 1 && y >= 2 && field[x - 2][y - 2] == null) {
                     moves.add(Move.of(x, y, x - 2, y - 2, true));
                 }
             }
@@ -64,7 +69,7 @@ public class CheckersGame implements Playable{
                 if (corner == null) {
                     moves.add(Move.of(x, y, x + 1, y - 1));
                 }
-                if (isEnemy(type, x + 1, y - 1) && x < 6 && y > 2 && field[x + 2][y - 2] == null) {
+                if (isEnemy(type, x + 1, y - 1) && x < 6 && y >= 2 && field[x + 2][y - 2] == null) {
                     moves.add(Move.of(x, y, x + 2, y - 2, true));
                 }
             }
@@ -90,6 +95,7 @@ public class CheckersGame implements Playable{
         CheckersGame newGame = new CheckersGame(this);
         newGame.field[move.xEnd()][move.yEnd()] = newGame.field[move.xStart()][move.yStart()];
         newGame.field[move.xStart()][move.yStart()] = null;
+        
         return newGame;
     }
 
@@ -102,7 +108,7 @@ public class CheckersGame implements Playable{
     public Location getKnockout(Move move) {
         int xDirection = move.xStart() > move.xEnd() ? -1 : 1;
         int yDirection = move.yStart() > move.yEnd() ? -1 : 1;
-        for(int offset = 1; offset <  move.xStart() - move.xEnd(); offset++) {
+        for(int offset = 1; offset <  Math.abs(move.xStart() - move.xEnd()); offset++) {
             System.out.println("X: " + move.xStart() + offset * xDirection + "Y: " + move.yStart() + offset * yDirection);
             if (field[move.xStart() + offset * xDirection][move.yStart() + offset * yDirection] != null) {
                 return new Location(move.xStart() + offset * xDirection, move.yStart() + offset * yDirection);

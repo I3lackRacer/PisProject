@@ -75,4 +75,9 @@ public class Board {
         
         return selected;
     }
+
+    public void deselect() {
+        selected.setSelected(false);
+        selected = null;
+    }
 }
