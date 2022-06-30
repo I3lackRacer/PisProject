@@ -2,6 +2,9 @@ package game;
 
 import java.util.Optional;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import processing.core.PApplet;
 
 public class App extends PApplet {
@@ -13,11 +16,12 @@ public class App extends PApplet {
     private Board board; 
     private Screen currentScreen = Screen.MENU;
     private Button startGame2PlayerButton = new Button("2 Player", 200 , 100, 140, 50, true);
-    private Button startGameEasyButton = new Button("Bot Easy", 200 , 200, 140, 50, true);
+    private Button startBotButton = new Button("Bot Easy", 200 , 200, 140, 50, true);
     private Button startGameHardButton = new Button("Bot Hard", 200 , 300, 140, 50, true);
     private GameMode gameMode = GameMode.TWOPLAYER;
     private boolean isWhiteTurn;
     private Player selected = null;
+    private static Logger logger = LogManager.getLogger(App.class);
 
     @Override
     public void setup() {
@@ -40,7 +44,7 @@ public class App extends PApplet {
                 textAlign(CENTER);
                 text("Start Game", width/ 2, 200);
                 startGame2PlayerButton.draw(this);
-                startGameEasyButton.draw(this);
+                startBotButton.draw(this);
                 startGameHardButton.draw(this);
             }
             case GAME -> {
@@ -56,6 +60,7 @@ public class App extends PApplet {
 
     private void setupNewGame() {
         board.newGame();
+        logger.info("Initialized new game");
     }
 
     private void drawGameField() {
@@ -85,13 +90,8 @@ public class App extends PApplet {
                     currentScreen = Screen.GAME;
                     setupNewGame();
                 }
-                if (startGameEasyButton.collision(mouseX, mouseY)) {
-                    gameMode = GameMode.EASY;
-                    currentScreen = Screen.GAME;
-                    setupNewGame();
-                }
-                if (startGameHardButton.collision(mouseX, mouseY)) {
-                    gameMode = GameMode.HARD;
+                if (startBotButton.collision(mouseX, mouseY)) {
+                    gameMode = GameMode.BOTGAME;
                     currentScreen = Screen.GAME;
                     setupNewGame();
                 }
@@ -104,14 +104,19 @@ public class App extends PApplet {
                     if (move.isEmpty()) {
                         return;
                     }
-                    board.play(move.get());
+                    Move playMove = move.get();
+                    board.play(playMove);
+                    logger.info("Moved player from (" + playMove.xStart() + "/" + playMove.yStart() + ") to (" + playMove.xEnd() + "/" + playMove.yEnd() + ")");
+                    if (playMove.knockout()) {
+                        logger.info("Knocked out an enemy with the last move");
+                    }
                     selected = null;
                     isWhiteTurn = !isWhiteTurn;
                 } else {
                     Player p = board.getPlayer(x, y);
                     if (p == null) {
                         selected = null;
-                        board.deselect();
+                        board.deselectPlayer();
                         return;
                     }
                     if((p.getPlayerType() == PlayerType.WHITE && isWhiteTurn) || (p.getPlayerType() == PlayerType.BLACK && !isWhiteTurn)) {

@@ -1,10 +1,14 @@
 package game;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import processing.core.PApplet;
 
 public class Button {
     private String text;
     private int x,y,width, height, clickTimer = 0;
+    private static Logger logger = LogManager.getLogger(Button.class);
 
     public Button(String text, int x, int y, int width, int height, boolean centered) {
         this.text = text;
@@ -22,6 +26,7 @@ public class Button {
     public boolean collision(int coordX, int coordY) {
         boolean clicked = y < coordY && y + height > coordY && x < coordX && x + width > coordX;
         if (clicked) {
+            logger.info("Button '" + text + "' has been pressed");
             clickTimer = 120;
         }
         return clicked;

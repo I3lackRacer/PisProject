@@ -1,6 +1,7 @@
 package game;
 
 import java.util.ArrayList;
+import java.util.Collection;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -20,7 +21,6 @@ public class CheckersGame implements Playable{
                 field[x][y] = game.field[x][y];
             }
         }
-        logger.info("Backend generated new checkers game");
     }
 
     public CheckersGame copy(CheckersGame game) {
@@ -43,6 +43,13 @@ public class CheckersGame implements Playable{
     public ArrayList<Move> getAvaiableMoves(int x, int y) {
         ArrayList<Move> moves = new ArrayList<>();
         PlayerType type = field[x][y];
+        if (type == PlayerType.BLACK_QUEEN || type == PlayerType.WHITE_QUEEN) {
+            moves.addAll(getAvaiableMovesDirection(x, y, 1, 1));
+            moves.addAll(getAvaiableMovesDirection(x, y, -1, -1));
+            moves.addAll(getAvaiableMovesDirection(x, y, 1, -1));
+            moves.addAll(getAvaiableMovesDirection(x, y, -1, 1));
+            return moves;
+        }
         if (x > 0) {
             if (y > 0) {
                 PlayerType corner = field[x - 1][y - 1];
@@ -86,6 +93,22 @@ public class CheckersGame implements Playable{
         return moves;
     }
 
+    private ArrayList<Move> getAvaiableMovesDirection(int x, int y, int xMultiplicator, int yMultiplicator) {
+        ArrayList<Move> moves = new ArrayList<>();
+        PlayerType p = field[x][y];
+        for (int i = 0; i < field.length; i++) {
+            if (field[x + i*xMultiplicator][y + i*yMultiplicator] == null) {
+                moves.add(Move.of(x, x, x + i * xMultiplicator, y + i * yMultiplicator));
+            } else {
+                if ( x + i*xMultiplicator + 1 >= 0 && x + i*xMultiplicator + 1 < 8 && y + i*yMultiplicator + 1 >= 0 && y + i*yMultiplicator + 1 < 8 && field[x + i*xMultiplicator + 1][y + i*yMultiplicator + 1] == null && isEnemy(p, x + i * xMultiplicator, y + i * yMultiplicator)) {
+                    moves.add(Move.of(x, x, x + i * xMultiplicator + 1, y + i * yMultiplicator + 1, true));
+                }
+                break;
+            }
+        }
+        return moves;
+    }
+
     private boolean isEnemy(PlayerType type, int x, int y) {
         return ((type == PlayerType.WHITE || type == PlayerType.WHITE_QUEEN) && (field[x][y] == PlayerType.BLACK || field[x][y] == PlayerType.BLACK_QUEEN)) || ((type == PlayerType.BLACK || type == PlayerType.BLACK_QUEEN) && (field[x][y] == PlayerType.WHITE || field[x][y] == PlayerType.WHITE_QUEEN));
     }
@@ -95,7 +118,13 @@ public class CheckersGame implements Playable{
         CheckersGame newGame = new CheckersGame(this);
         newGame.field[move.xEnd()][move.yEnd()] = newGame.field[move.xStart()][move.yStart()];
         newGame.field[move.xStart()][move.yStart()] = null;
-        
+        PlayerType player = newGame.field[move.xEnd()][move.yEnd()];
+        if(player == PlayerType.WHITE && move.yEnd() == 0) {
+            newGame.field[move.xEnd()][move.yEnd()] = PlayerType.WHITE_QUEEN;
+        }
+        if(player == PlayerType.BLACK && move.yEnd() == 7) {
+            newGame.field[move.xEnd()][move.yEnd()] = PlayerType.BLACK_QUEEN;
+        }
         return newGame;
     }
 

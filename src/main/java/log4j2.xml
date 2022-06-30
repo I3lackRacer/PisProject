@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Configuration status="info">
+    <Properties>
+        <Property name="layout">%d [%t] %-5level %logger - %m%n</Property>
+    </Properties>
+
+    <Appenders>
+        <Console name="console" target="SYSTEM_OUT" follow="true">
+            <PatternLayout pattern="${layout}"/>
+        </Console>
+
+        <File name="MyFile" fileName="C:/Users/Public/mylog.log" append="false">
+            <PatternLayout pattern="${layout}"/>
+        </File>
+
+    </Appenders>
+
+    <Loggers>
+
+        <Logger name="game" level="debug" additivity="false" >
+            <AppenderRef ref="console" />
+        </Logger>
+        <Root level="info">
+            <AppenderRef ref="console" />
+        </Root>
+
+    </Loggers>
+</Configuration>

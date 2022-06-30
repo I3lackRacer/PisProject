@@ -14,4 +14,5 @@ public interface Player {
     void avaiableMoves(ArrayList<Move> moves);
     PlayerType getPlayerType();
     ArrayList<Move> getMoves();
+    boolean isWhite();
 }
