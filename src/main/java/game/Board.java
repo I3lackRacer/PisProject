@@ -2,6 +2,9 @@ package game;
 
 import java.util.ArrayList;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import processing.core.PApplet;
 
 public class Board {
@@ -10,6 +13,7 @@ public class Board {
     private ArrayList<Player> players = new ArrayList<>();
     private Playable backend;
     private Player selected = null;
+    private static Logger logger = LogManager.getLogger(Board.class);
 
     public Board(Playable backend) {
         this.backend = backend;
@@ -48,6 +52,18 @@ public class Board {
             players.removeIf((player) -> {return player.getX() == deadPlayerPos.x() && player.getY() == deadPlayerPos.y();});
             backend.setField(deadPlayerPos.x(), deadPlayerPos.y(), null);
         }
+        if (p.isWhite() && p.getY() == 0) {
+            logger.info("White got a Queen");
+            gameField[move.xEnd()][move.yEnd()] = new WhiteQueen(p);
+            players.remove(p);
+            players.add(getPlayer(move.xEnd(), move.yEnd()));
+        }
+        if (!p.isWhite() && p.getY() == 7) {
+            logger.info("Black got a Queen");
+            gameField[move.xEnd()][move.yEnd()] = new BlackQueen(p);
+            players.remove(p);
+            players.add(getPlayer(move.xEnd(), move.yEnd()));
+        }
         backend = backend.play(move);
         selected.setSelected(false);
         selected = null;
@@ -76,7 +92,7 @@ public class Board {
         return selected;
     }
 
-    public void deselect() {
+    public void deselectPlayer() {
         selected.setSelected(false);
         selected = null;
     }

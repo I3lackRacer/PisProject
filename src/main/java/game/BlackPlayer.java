@@ -6,9 +6,9 @@ import processing.core.PApplet;
 
 public class BlackPlayer implements Player {
 
-    private int x, y;
-    private boolean isSelected = false;
-    private ArrayList<Move> moves;
+    protected int x, y;
+    protected boolean isSelected = false;
+    protected ArrayList<Move> moves;
 
     public BlackPlayer(int x, int y) {
         this.x = x;
@@ -73,5 +73,10 @@ public class BlackPlayer implements Player {
     @Override
     public ArrayList<Move> getMoves() {
         return moves;
+    }
+
+    @Override
+    public boolean isWhite() {
+        return false;
     }
 }
