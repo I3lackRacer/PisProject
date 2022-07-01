@@ -17,7 +17,6 @@ public class WhiteQueen extends WhitePlayer{
     @Override
     public void draw(PApplet canvas) {
         super.draw(canvas);
-        canvas.fill(canvas.color(200, 0, 0));
-        canvas.circle(25 + x * 50, 25 + y * 50, 5);
+        canvas.image(App.heart, 25 + x * 70, 25 + y * 70, 21, 21); 
     }
 }

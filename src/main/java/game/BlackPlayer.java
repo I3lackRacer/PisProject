@@ -30,7 +30,7 @@ public class BlackPlayer implements Player {
             canvas.strokeWeight(3);
             canvas.stroke(canvas.color(255, 0, 0));
         }
-        canvas.circle(25 + x * 50, 25 + y * 50, 35);
+        canvas.circle(35 + x * 70, 35 + y * 70, 40);
         if (isSelected) {
             drawMoves(canvas);
             canvas.strokeWeight(1);
@@ -41,7 +41,7 @@ public class BlackPlayer implements Player {
         for (Move move : moves) {
             canvas.noFill();
             canvas.strokeWeight(3);
-            canvas.rect(move.xEnd()*50, move.yEnd()*50, 50, 50);
+            canvas.rect(move.xEnd()*70, move.yEnd()*70, 70, 70);
         }
     }
 

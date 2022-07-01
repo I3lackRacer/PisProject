@@ -93,6 +93,8 @@ public class Board {
     }
 
     public void deselectPlayer() {
+        if (selected == null)
+            return;
         selected.setSelected(false);
         selected = null;
     }
