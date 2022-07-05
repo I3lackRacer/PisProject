@@ -89,17 +89,15 @@ public class App extends PApplet {
     }
 
     @Override
-    public void keyPressed() {
-    }
-
-    @Override
     public void mouseClicked() {
         switch (currentScreen) {
             case MENU -> {
                 if (startGame2PlayerButton.collision(mouseX, mouseY)) {
                     gameMode = GameMode.TWOPLAYER;
                     currentScreen = Screen.GAME;
-                    setupNewGame();
+                    //setupNewGame();
+                    board.addPlayer(new WhitePlayer(2, 5));
+                    board.addPlayer(new BlackPlayer(4, 5));
                 }
                 if (startBotButton.collision(mouseX, mouseY)) {
                     gameMode = GameMode.BOTGAME;

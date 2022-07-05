@@ -20,6 +20,7 @@ public class Board {
     }
 
     public void newGame() {
+        backend.setupNewGame();
         gameField = new Player[8][8];
         for (int x = 1; x < 8; x += 2) {
             addPlayer(new BlackPlayer(x, 0));
@@ -36,6 +37,7 @@ public class Board {
     public void addPlayer(Player player) {
         assert player.getX() >= 0 && player.getX() < 8 && player.getY() >= 0 && player.getY() < 8;
         gameField[player.getX()][player.getY()] = player;
+        backend.setField(player.getX(), player.getY(), player.getPlayerType());
         players.add(player);
     }
 
@@ -49,7 +51,9 @@ public class Board {
             Location deadPlayerPos = backend.getKnockout(move);
             assert deadPlayerPos != null : "This should not happen";
             gameField[deadPlayerPos.x()][deadPlayerPos.y()] = null;
-            players.removeIf((player) -> {return player.getX() == deadPlayerPos.x() && player.getY() == deadPlayerPos.y();});
+            players.removeIf((player) -> {
+                return player.getX() == deadPlayerPos.x() && player.getY() == deadPlayerPos.y();
+            });
             backend.setField(deadPlayerPos.x(), deadPlayerPos.y(), null);
         }
         if (p.isWhite() && p.getY() == 0) {
@@ -88,7 +92,7 @@ public class Board {
             ArrayList<Move> moves = backend.getAvaiableMoves(x, y);
             selected.avaiableMoves(moves);
         }
-        
+
         return selected;
     }
 
@@ -97,5 +101,20 @@ public class Board {
             return;
         selected.setSelected(false);
         selected = null;
+    }
+
+    public void clearBoardforDebug() {
+        CheckersGame checkersGame = (CheckersGame) backend;
+        Player tmp = gameField[0][1];
+        for (Player player : players) {
+            if (selected != player || player.getY() != 0 && player.getX() == 1) {
+                checkersGame.field[player.getX()][player.getY()] = null;
+                gameField[player.getX()][player.getY()] = null;
+            }
+            players.clear();
+            addPlayer(selected);
+            addPlayer(tmp);
+            backend = checkersGame;
+        }
     }
 }
