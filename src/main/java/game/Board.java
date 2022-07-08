@@ -37,7 +37,7 @@ public class Board {
     public void addPlayer(Player player) {
         assert player.getX() >= 0 && player.getX() < 8 && player.getY() >= 0 && player.getY() < 8;
         gameField[player.getX()][player.getY()] = player;
-        backend.setField(player.getX(), player.getY(), player.getPlayerType());
+        backend = backend.setField(player.getX(), player.getY(), player.getPlayerType());
         players.add(player);
     }
 
@@ -54,7 +54,7 @@ public class Board {
             players.removeIf((player) -> {
                 return player.getX() == deadPlayerPos.x() && player.getY() == deadPlayerPos.y();
             });
-            backend.setField(deadPlayerPos.x(), deadPlayerPos.y(), null);
+            backend = backend.setField(deadPlayerPos.x(), deadPlayerPos.y(), null);
         }
         if (p.isWhite() && p.getY() == 0) {
             logger.info("White got a Queen");
