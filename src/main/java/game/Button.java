@@ -45,6 +45,7 @@ public class Button {
         }
         canvas.textAlign(PApplet.CENTER, PApplet.CENTER);
         canvas.text(text, x + (width / 2), y + (height / 2));
+        canvas.fill(255);
     }
 
     public void setText(String text) {

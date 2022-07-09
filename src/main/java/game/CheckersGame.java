@@ -4,15 +4,14 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
-import javax.lang.model.util.ElementScanner14;
-
-public class CheckersGame implements Playable{
+public class CheckersGame implements Playable {
 
     PlayerType[][] field = new PlayerType[8][8];
-    static final Logger logger = LogManager.getLogger(CheckersGame.class);
-    static Random rmd = new Random();
+    private static final Logger logger = LogManager.getLogger(CheckersGame.class);
+    private final Random rmd = new Random();
 
     public CheckersGame() {
     }
@@ -93,19 +92,41 @@ public class CheckersGame implements Playable{
         return moves;
     }
 
+    @Override
+    public Move bestMove() {
+        List<Location> players = new ArrayList<>();
+        for (int x = 0; x < field.length; x++) {
+            PlayerType[] row = field[x];
+            for (int y = 0; y < row.length; y++) {
+                if (isEnemy(PlayerType.WHITE, x, y))
+                    players.add(new Location(x, y));
+            }
+        }
+        Location rmdPlayer;
+        do {
+            rmdPlayer = players.get(rmd.nextInt(players.size()));
+        }while (getAvaiableMoves(rmdPlayer.x(), rmdPlayer.y()).size() == 0);
+        return randomMove(rmdPlayer.x(), rmdPlayer.y());
+    }
+
+    private Move randomMove(int x, int y) {
+        ArrayList<Move> avaiableMoves = getAvaiableMoves(x, y);
+        return avaiableMoves.get(rmd.nextInt(avaiableMoves.size()));
+    }
+
     private ArrayList<Move> getAvaiableMovesDirection(int x, int y, int xMultiplicator, int yMultiplicator) {
         ArrayList<Move> moves = new ArrayList<>();
         PlayerType p = field[x][y];
-        
+
         System.out.printf("Player (%d/%d) %d - %d %n", x, y, xMultiplicator, yMultiplicator);
         for (int i = 1; i < field.length; i++) {
-            System.out.printf("(%d/%d)%n", x + i*xMultiplicator, y + i*yMultiplicator);
-            if (x + i*xMultiplicator < 0 || x + i * xMultiplicator > field.length || y + i*yMultiplicator < 0 || y + i*yMultiplicator > field.length)
+            System.out.printf("(%d/%d)%n", x + i * xMultiplicator, y + i * yMultiplicator);
+            if (x + i * xMultiplicator < 0 || x + i * xMultiplicator >= field.length || y + i * yMultiplicator < 0 || y + i * yMultiplicator >= field.length)
                 break;
-            if (field[x + i*xMultiplicator][y + i*yMultiplicator] == null) {
+            if (field[x + i * xMultiplicator][y + i * yMultiplicator] == null) {
                 moves.add(Move.of(x, y, x + i * xMultiplicator, y + i * yMultiplicator));
             } else {
-                if ( x + i*xMultiplicator + 1 >= 0 && x + i*xMultiplicator + 1 < 8 && y + i*yMultiplicator + 1 >= 0 && y + i*yMultiplicator + 1 < 8 && field[x + i*xMultiplicator + 1][y + i*yMultiplicator + 1] == null && isEnemy(p, x + i * xMultiplicator, y + i * yMultiplicator)) {
+                if (x + (i + 1) * xMultiplicator >= 0 && x + (i + 1) * xMultiplicator < 8 && y + (i + 1) * yMultiplicator >= 0 && y + (i + 1) * yMultiplicator < 8 && field[x + (i + 1) * xMultiplicator][y + (i + 1) * yMultiplicator] == null && isEnemy(p, x + i * xMultiplicator, y + i * yMultiplicator)) {
                     moves.add(Move.of(x, y, x + i * xMultiplicator + 1, y + i * yMultiplicator + 1, true));
                 }
                 break;
@@ -194,7 +215,7 @@ public class CheckersGame implements Playable{
         if(player == PlayerType.WHITE && move.yEnd() == 0) {
             newGame.field[move.xEnd()][move.yEnd()] = PlayerType.WHITE_QUEEN;
         }
-        if(player == PlayerType.BLACK && move.yEnd() == 7) {
+        if (player == PlayerType.BLACK && move.yEnd() == 7) {
             newGame.field[move.xEnd()][move.yEnd()] = PlayerType.BLACK_QUEEN;
         }
         return newGame;
@@ -204,7 +225,7 @@ public class CheckersGame implements Playable{
     public Location getKnockout(Move move) {
         int xDirection = move.xStart() > move.xEnd() ? -1 : 1;
         int yDirection = move.yStart() > move.yEnd() ? -1 : 1;
-        for(int offset = 1; offset <  Math.abs(move.xStart() - move.xEnd()); offset++) {
+        for (int offset = 1; offset < Math.abs(move.xStart() - move.xEnd()); offset++) {
             System.out.println("X: " + move.xStart() + offset * xDirection + "Y: " + move.yStart() + offset * yDirection);
             if (field[move.xStart() + offset * xDirection][move.yStart() + offset * yDirection] != null) {
                 return new Location(move.xStart() + offset * xDirection, move.yStart() + offset * yDirection);
@@ -223,6 +244,22 @@ public class CheckersGame implements Playable{
 
     @Override
     public PlayerType whoWon() {
+        boolean whitePlayers = false;
+        boolean blackPlayers = false;
+        for (PlayerType[] row : field)
+            for (PlayerType cell : row) {
+                if (cell == PlayerType.BLACK || cell == PlayerType.BLACK_QUEEN)
+                    blackPlayers = true;
+                else if (cell == PlayerType.WHITE || cell == PlayerType.WHITE_QUEEN)
+                    whitePlayers = true;
+            }
+        if (!blackPlayers) {
+            return PlayerType.WHITE;
+        }
+        if (!whitePlayers) {
+            return PlayerType.BLACK;
+        }
+
         return null;
     }
 
@@ -331,8 +368,13 @@ interface Playable {
     void setupNewGame();
     Playable setField(int x, int y, PlayerType type);
     Location getKnockout(Move move);
+
     ArrayList<Move> getAvaiableMoves(int x, int y);
+
     Playable play(Move move);
+
+    Move bestMove();
+
     PlayerType whoWon();
     Move bestMove();
 }

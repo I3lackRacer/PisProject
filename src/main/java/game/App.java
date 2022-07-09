@@ -1,12 +1,11 @@
 package game;
 
-import java.util.Optional;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 import processing.core.PApplet;
 import processing.core.PImage;
+
+import java.util.Optional;
 
 public class App extends PApplet {
 
@@ -18,13 +17,14 @@ public class App extends PApplet {
     public static PImage heart;
     private Board board;
     private Screen currentScreen = Screen.MENU;
-    private Button startGame2PlayerButton = new Button("2 Player", 200, 100, 140, 50, true);
-    private Button startBotButton = new Button("Bot Easy", 200, 200, 140, 50, true);
-    private Button startGameHardButton = new Button("Bot Hard", 200, 300, 140, 50, true);
+    private final Button startGame2PlayerButton = new Button("2 Player", 280, 100, 140, 50, true);
+    private final Button startBotButton = new Button("Bot Game", 280, 200, 140, 50, true);
     private GameMode gameMode = GameMode.TWOPLAYER;
+    private final Button restartButton = new Button("Restart Game", 280, 300, 150, 50, true);
     private boolean isWhiteTurn;
+    private PlayerType winner = null;
     private Player selected = null;
-    private static Logger logger = LogManager.getLogger(App.class);
+    private static final Logger logger = LogManager.getLogger(App.class);
 
     @Override
     public void setup() {
@@ -54,7 +54,6 @@ public class App extends PApplet {
                 text("Start Game", width / 2, 200);
                 startGame2PlayerButton.draw(this);
                 startBotButton.draw(this);
-                startGameHardButton.draw(this);
             }
             case GAME -> {
                 background(255);
@@ -62,7 +61,12 @@ public class App extends PApplet {
                 board.draw(this);
             }
             case GAMEOVER -> {
-
+                background(0);
+                textAlign(CENTER);
+                color(100);
+                text("GAME OVER", width / 2, 100);
+                text(winner.toString() + " WON!", width/ 2, 400);
+                restartButton.draw(this);
             }
         }
     }
@@ -108,12 +112,8 @@ public class App extends PApplet {
             case GAME -> {
                 int x = mouseX / 70;
                 int y = mouseY / 70;
-                if (selected != null && selected.getMoves().stream().anyMatch((move) -> {
-                    return move.xEnd() == x && move.yEnd() == y;
-                })) {
-                    Optional<Move> move = selected.getMoves().stream().filter((m) -> {
-                        return m.xEnd() == x && m.yEnd() == y;
-                    }).findAny();
+                if (selected != null && selected.getMoves().stream().anyMatch((move) -> move.xEnd() == x && move.yEnd() == y)) {
+                    Optional<Move> move = selected.getMoves().stream().filter((m) -> m.xEnd() == x && m.yEnd() == y).findAny();
                     if (move.isEmpty()) {
                         return;
                     }
@@ -126,6 +126,18 @@ public class App extends PApplet {
                     }
                     selected = null;
                     isWhiteTurn = !isWhiteTurn;
+                    winner = board.whoWon();
+                    if (winner != null) {
+                        currentScreen = Screen.GAMEOVER;
+                    }
+                    if (gameMode == GameMode.BOTGAME && currentScreen == Screen.GAME) {
+                        board.botPlay();
+                        winner = board.whoWon();
+                        if (winner != null) {
+                            currentScreen = Screen.GAMEOVER;
+                        }
+                        isWhiteTurn = !isWhiteTurn;
+                    }
                 } else {
                     Player p = board.getPlayer(x, y);
                     if (p == null) {
@@ -140,8 +152,14 @@ public class App extends PApplet {
                 }
             }
             case GAMEOVER -> {
-
+                if (restartButton.collision(mouseX, mouseY)) {
+                    restart();
+                }
             }
         }
+    }
+
+    private void restart() {
+
     }
 }

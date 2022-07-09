@@ -1,11 +1,10 @@
 package game;
 
-import java.util.ArrayList;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 import processing.core.PApplet;
+
+import java.util.ArrayList;
 
 public class Board {
 
@@ -69,8 +68,10 @@ public class Board {
             players.add(getPlayer(move.xEnd(), move.yEnd()));
         }
         backend = backend.play(move);
-        selected.setSelected(false);
-        selected = null;
+        if (selected != null) {
+            selected.setSelected(false);
+            selected = null;
+        }
     }
 
     public Player getPlayer(int xStart, int yStart) {
@@ -103,18 +104,12 @@ public class Board {
         selected = null;
     }
 
-    public void clearBoardforDebug() {
-        CheckersGame checkersGame = (CheckersGame) backend;
-        Player tmp = gameField[0][1];
-        for (Player player : players) {
-            if (selected != player || player.getY() != 0 && player.getX() == 1) {
-                checkersGame.field[player.getX()][player.getY()] = null;
-                gameField[player.getX()][player.getY()] = null;
-            }
-            players.clear();
-            addPlayer(selected);
-            addPlayer(tmp);
-            backend = checkersGame;
-        }
+    public PlayerType whoWon() {
+        return backend.whoWon();
+    }
+
+    public void botPlay() {
+        Move botMove = backend.bestMove();
+        play(botMove);
     }
 }
