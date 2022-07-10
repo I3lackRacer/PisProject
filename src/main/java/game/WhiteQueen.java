@@ -3,8 +3,12 @@ package game;
 import processing.core.PApplet;
 
 public class WhiteQueen extends WhitePlayer{
-    
-    
+
+    @Override
+    public PlayerType getPlayerType() {
+        return PlayerType.WHITE_QUEEN;
+    }
+
     public WhiteQueen(int x, int y) {
         super(x, y);
     }

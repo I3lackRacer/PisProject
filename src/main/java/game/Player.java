@@ -1,8 +1,8 @@
 package game;
 
-import java.util.ArrayList;
-
 import processing.core.PApplet;
+
+import java.util.ArrayList;
 
 public interface Player {
 
@@ -12,6 +12,7 @@ public interface Player {
     void draw(PApplet canvas);
     void setSelected(boolean isSelected);
     void avaiableMoves(ArrayList<Move> moves);
+    PlayerType getPlayerSide();
     PlayerType getPlayerType();
     ArrayList<Move> getMoves();
     boolean isWhite();

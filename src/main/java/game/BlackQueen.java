@@ -4,6 +4,11 @@ import processing.core.PApplet;
 
 public class BlackQueen extends BlackPlayer {
 
+    @Override
+    public PlayerType getPlayerType() {
+        return PlayerType.WHITE_QUEEN;
+    }
+
     public BlackQueen(int x, int y) {
         super(x, y);
     }

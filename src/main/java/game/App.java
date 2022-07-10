@@ -10,6 +10,8 @@ import java.util.Optional;
 public class App extends PApplet {
 
 
+    private boolean loading = false;
+
     public static void main(String[] args) {
         PApplet.runSketch(new String[] { "" }, new App());
     }
@@ -44,7 +46,6 @@ public class App extends PApplet {
 
     @Override
     public void draw() {
-
         background(0);
         switch (currentScreen) {
             case MENU -> {
@@ -56,6 +57,9 @@ public class App extends PApplet {
                 startBotButton.draw(this);
             }
             case GAME -> {
+                if (loading) {
+                    this.text("Loading", height/2, width/2);
+                }
                 background(255);
                 drawGameField();
                 board.draw(this);
@@ -99,9 +103,7 @@ public class App extends PApplet {
                 if (startGame2PlayerButton.collision(mouseX, mouseY)) {
                     gameMode = GameMode.TWOPLAYER;
                     currentScreen = Screen.GAME;
-                    //setupNewGame();
-                    board.addPlayer(new WhitePlayer(2, 5));
-                    board.addPlayer(new BlackPlayer(4, 5));
+                    setupNewGame();
                 }
                 if (startBotButton.collision(mouseX, mouseY)) {
                     gameMode = GameMode.BOTGAME;
@@ -131,7 +133,10 @@ public class App extends PApplet {
                         currentScreen = Screen.GAMEOVER;
                     }
                     if (gameMode == GameMode.BOTGAME && currentScreen == Screen.GAME) {
+                        loading = true;
+                        draw();
                         board.botPlay();
+                        loading = false;
                         winner = board.whoWon();
                         if (winner != null) {
                             currentScreen = Screen.GAMEOVER;
@@ -145,8 +150,8 @@ public class App extends PApplet {
                         board.deselectPlayer();
                         return;
                     }
-                    if ((p.getPlayerType() == PlayerType.WHITE && isWhiteTurn)
-                            || (p.getPlayerType() == PlayerType.BLACK && !isWhiteTurn)) {
+                    if ((p.getPlayerSide() == PlayerType.WHITE && isWhiteTurn)
+                            || (p.getPlayerSide() == PlayerType.BLACK && !isWhiteTurn)) {
                         selected = board.select(x, y);
                     }
                 }

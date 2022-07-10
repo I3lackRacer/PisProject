@@ -1,8 +1,8 @@
 package game;
 
-import java.util.ArrayList;
-
 import processing.core.PApplet;
+
+import java.util.ArrayList;
 
 public class WhitePlayer implements Player {
 
@@ -58,6 +58,11 @@ public class WhitePlayer implements Player {
     @Override
     public void setSelected(boolean isSelected) {
         this.isSelected = isSelected;
+    }
+
+    @Override
+    public PlayerType getPlayerSide() {
+        return PlayerType.WHITE;
     }
 
     @Override
