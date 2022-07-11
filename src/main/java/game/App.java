@@ -3,6 +3,7 @@ package game;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import processing.core.PApplet;
+import processing.core.PFont;
 import processing.core.PImage;
 
 import java.util.Optional;
@@ -11,6 +12,9 @@ public class App extends PApplet {
 
 
     private boolean loading = false;
+
+    private PFont font;
+    private PImage backgroundImage;
 
     public static void main(String[] args) {
         PApplet.runSketch(new String[] { "" }, new App());
@@ -37,6 +41,9 @@ public class App extends PApplet {
 
     private void loadResources() {
         heart = loadImage("./src/main/resources/heart.png");
+        backgroundImage = loadImage("./src/main/resources/background.png");
+        backgroundImage.resize(560, 560);
+        font = createFont("./src/main/resources/font.ttf", 128);
     }
 
     @Override
@@ -49,10 +56,17 @@ public class App extends PApplet {
         background(0);
         switch (currentScreen) {
             case MENU -> {
-                fill(100);
-                textSize(50);
+                background(backgroundImage);
+                textFont(font);
+                noStroke();
+                fill(color(0, 0, 0, 180));
+                rect(0, 300, 560, 220);
                 textAlign(CENTER);
-                text("Start Game", width / 2, 200);
+                textSize(50);
+                fill(color(223, 215, 200));
+                text("Lets play some", width / 2, 350);
+                textSize(100);
+                text("CHECKERS!", width / 2, 450);
                 startGame2PlayerButton.draw(this);
                 startBotButton.draw(this);
             }
@@ -128,8 +142,8 @@ public class App extends PApplet {
                     }
                     selected = null;
                     isWhiteTurn = !isWhiteTurn;
-                    winner = board.whoWon();
-                    if (winner != null) {
+                    if (board.isGameOver()) {
+                        winner = board.whoWon();
                         currentScreen = Screen.GAMEOVER;
                     }
                     if (gameMode == GameMode.BOTGAME && currentScreen == Screen.GAME) {
@@ -137,8 +151,8 @@ public class App extends PApplet {
                         draw();
                         board.botPlay();
                         loading = false;
-                        winner = board.whoWon();
                         if (winner != null) {
+                            winner = board.whoWon();
                             currentScreen = Screen.GAMEOVER;
                         }
                         isWhiteTurn = !isWhiteTurn;

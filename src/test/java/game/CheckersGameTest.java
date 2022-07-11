@@ -97,7 +97,6 @@ public class CheckersGameTest {
 
     @Test
     public void testMonteCarlo() {
-        CheckersGame game = new CheckersGame();
-        game.setupNewGame();
+        CheckersGame game = new CheckersGame().setupNewGame();
     }
 }

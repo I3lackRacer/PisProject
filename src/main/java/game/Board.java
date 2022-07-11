@@ -19,7 +19,7 @@ public class Board {
     }
 
     public void newGame() {
-        backend.setupNewGame();
+        backend = backend.setupNewGame();
         gameField = new Player[8][8];
         for (int x = 1; x < 8; x += 2) {
             addPlayer(new BlackPlayer(x, 0));
@@ -103,6 +103,10 @@ public class Board {
 
     public PlayerType whoWon() {
         return backend.whoWon();
+    }
+
+    public boolean isGameOver() {
+        return backend.isGameOver();
     }
 
     public void botPlay() {

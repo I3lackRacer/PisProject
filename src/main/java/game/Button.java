@@ -34,9 +34,8 @@ public class Button {
 
     public void draw(PApplet canvas) {
         canvas.textSize((float)(height * 0.5));
-        canvas.color(0);
-        canvas.fill(0);
         canvas.stroke(255);
+        canvas.fill(canvas.color(73,48,44));
         canvas.rect(x, y, width, height);
         canvas.fill(255);
         if (clickTimer != 0) {
@@ -44,6 +43,7 @@ public class Button {
             clickTimer--;
         }
         canvas.textAlign(PApplet.CENTER, PApplet.CENTER);
+        canvas.fill(canvas.color(223, 215, 200));
         canvas.text(text, x + (width / 2), y + (height / 2));
         canvas.fill(255);
     }

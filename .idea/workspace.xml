@@ -5,21 +5,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a953e154-e1fa-418c-8c8d-8a54ab0ec16b" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/REAME.docx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/~$REAME.docx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/background.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/font.ttf" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/REAME.docx" beforeDir="false" afterPath="$PROJECT_DIR$/REAME.docx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/game/App.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/game/App.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/game/BlackPlayer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/game/BlackPlayer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/game/BlackQueen.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/game/BlackQueen.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/game/Board.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/game/Board.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/game/Button.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/game/Button.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/game/CheckersGame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/game/CheckersGame.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/game/Player.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/game/Player.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/game/WhitePlayer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/game/WhitePlayer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/game/WhiteQueen.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/game/WhiteQueen.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/log4j2.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/log4j2.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/log4j2.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/log4j2.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/java/game/CheckersGameTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/game/CheckersGameTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/~$REAME.docx" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -98,6 +94,10 @@
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\racer\IdeaProjects\PisProject" />
       <recent name="C:\Users\racer\IdeaProjects\PisProject\lib" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\racer\IdeaProjects\PisProject\src\main\resources" />
+      <recent name="C:\Users\racer\IdeaProjects\PisProject\src\main\java\game" />
     </key>
   </component>
   <component name="RunManager" selected="Application.App">
@@ -235,6 +235,7 @@
       <workItem from="1657442583510" duration="7901000" />
       <workItem from="1657466058012" duration="5642000" />
       <workItem from="1657483036097" duration="1168000" />
+      <workItem from="1657551529200" duration="9562000" />
     </task>
     <servers />
   </component>
@@ -246,6 +247,13 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/game/CheckersGame.java</url>
+          <line>310</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
       <default-breakpoints>
         <breakpoint enabled="true" suspend="NONE" type="java-exception" />
       </default-breakpoints>
