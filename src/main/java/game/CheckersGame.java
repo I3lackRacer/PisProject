@@ -4,6 +4,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public class CheckersGame implements Playable {
@@ -92,11 +93,11 @@ public class CheckersGame implements Playable {
         }
         ArrayList<Move> allMoves = getAllMoves(false);
         int bestMoveEval = Integer.MAX_VALUE;
-        ArrayList<Move> bestMoves = new ArrayList<Move>();
+        List<Move> bestMoves = new ArrayList<Move>();
         logger.info("Started Evaluation");
         for (Move m: allMoves) {
             logger.info("Evaluating move (%d/%d) to (%d/%d)".formatted(m.xStart(), m.yStart(), m.xEnd(), m.yEnd()));
-            int eval = minMax(this.play(m), true, 5, Integer.MIN_VALUE, Integer.MAX_VALUE);
+            int eval = minMax(this.play(m), false, 5, Integer.MIN_VALUE, Integer.MAX_VALUE);
             logger.info("Evaluated move: " + eval);
             if (bestMoveEval > eval) {
                 bestMoves.clear();
@@ -107,7 +108,11 @@ public class CheckersGame implements Playable {
             }
         }
         assert bestMoves.size() != 0: "Best Moves should never be zero";
-        Move bestMove = allMoves.get(rmd.nextInt(allMoves.size()));
+        Move bestMove = bestMoves.get(rmd.nextInt(allMoves.size()));
+        if (bestMoves.stream().anyMatch((move) -> move.knockout())) {
+            bestMoves = bestMoves.stream().filter((move) -> move.knockout()).toList();
+            bestMove = bestMoves.get(rmd.nextInt(bestMoves.size()));
+        }
         logger.info("Finished Evaluation - Best Move: (%d/%d) to (%d/%d) eval: %d".formatted(bestMove.xStart(), bestMove.yStart(), bestMove.xEnd(), bestMove.yEnd(), bestMoveEval));
         return bestMove;
     }
@@ -272,22 +277,22 @@ public class CheckersGame implements Playable {
     }
 
     private static int playGameRandom(boolean whiteTurn, CheckersGame instance) {
-        if (instance.whoWon() != null) {
-            if (whiteTurn && instance.whoWon() == PlayerType.BLACK || !whiteTurn && instance.whoWon() == PlayerType.WHITE) {
-                return -1;
-            } 
-            return 1;
+        while(instance.whoWon() != null) {
+            ArrayList<Move> allMoves = instance.getAllMoves(whiteTurn);
+            if (allMoves.size() == 0) 
+                if (whiteTurn) {
+                    return -1;
+                } else 
+                    return 1;
+            Move move = allMoves.get(rmd.nextInt(allMoves.size()));
+            whiteTurn = !whiteTurn;
+            instance = instance.play(move);
         }
-
-        ArrayList<Move> allMoves = instance.getAllMoves(whiteTurn);
-        if (allMoves.size() == 0) 
-            if (whiteTurn) {
-                return -1;
-            } else 
-                return 1;
-        Move move = allMoves.get(rmd.nextInt(allMoves.size()));
-        return playGameRandom(!whiteTurn, instance.play(move));
-    }
+        if (whiteTurn && instance.whoWon() == PlayerType.BLACK || !whiteTurn && instance.whoWon() == PlayerType.WHITE) {
+            return -1;
+        } 
+        return 1;
+   }
 
     @Override
     public String toString() {
