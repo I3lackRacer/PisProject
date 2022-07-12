@@ -42,15 +42,8 @@ public class CheckersGame implements Playable {
         assert x >= 0 && x < field.length && y >= 0 && y < field.length: "x and y must be between 0 and 7";
         ArrayList<Move> moves = new ArrayList<>();
         PlayerType type = field[x][y];
-        if (type == PlayerType.BLACK_QUEEN || type == PlayerType.WHITE_QUEEN) {
-            moves.addAll(getAvaiableMovesDirection(x, y, 1, 1));
-            moves.addAll(getAvaiableMovesDirection(x, y, -1, -1));
-            moves.addAll(getAvaiableMovesDirection(x, y, 1, -1));
-            moves.addAll(getAvaiableMovesDirection(x, y, -1, 1));
-            return moves;
-        }
         if (x > 0) {
-            if (y > 0) {
+            if (y > 0 && type != PlayerType.BLACK) {
                 PlayerType corner = field[x - 1][y - 1];
                 if (corner == null) {
                     moves.add(Move.of(x, y, x - 1, y - 1));
@@ -59,7 +52,7 @@ public class CheckersGame implements Playable {
                     moves.add(Move.of(x, y, x - 2, y - 2, true));
                 }
             }
-            if (y < 7) {
+            if (y < 7 &&type != PlayerType.WHITE) {
                 PlayerType corner = field[x - 1][y + 1];
                 if (corner == null) {
                     moves.add(Move.of(x, y, x - 1, y + 1));
@@ -70,7 +63,7 @@ public class CheckersGame implements Playable {
             }
         }
         if (x < 7) {
-            if (y > 0) {
+            if (y > 0 && type != PlayerType.BLACK) {
                 PlayerType corner = field[x + 1][y - 1];
                 if (corner == null) {
                     moves.add(Move.of(x, y, x + 1, y - 1));
@@ -79,7 +72,7 @@ public class CheckersGame implements Playable {
                     moves.add(Move.of(x, y, x + 2, y - 2, true));
                 }
             }
-            if (y < 7) {
+            if (y < 7 && type != PlayerType.WHITE) {
                 PlayerType corner = field[x + 1][y + 1];
                 if (corner == null) {
                     moves.add(Move.of(x, y, x + 1, y + 1));
@@ -99,44 +92,24 @@ public class CheckersGame implements Playable {
         }
         ArrayList<Move> allMoves = getAllMoves(false);
         int bestMoveEval = Integer.MAX_VALUE;
-        Move bestMove = null;
+        ArrayList<Move> bestMoves = new ArrayList<Move>();
         logger.info("Started Evaluation");
         for (Move m: allMoves) {
             logger.info("Evaluating move (%d/%d) to (%d/%d)".formatted(m.xStart(), m.yStart(), m.xEnd(), m.yEnd()));
-            int eval = minMax(this.play(m), false, 5, Integer.MIN_VALUE, Integer.MAX_VALUE);
+            int eval = minMax(this.play(m), true, 5, Integer.MIN_VALUE, Integer.MAX_VALUE);
             logger.info("Evaluated move: " + eval);
             if (bestMoveEval > eval) {
-                bestMove = m;
+                bestMoves.clear();
+                bestMoves.add(m);
                 bestMoveEval = eval;
+            } if (bestMoveEval == eval) {
+                bestMoves.add(m);
             }
         }
-        assert bestMove != null: "Best Move should never be zero";
+        assert bestMoves.size() != 0: "Best Moves should never be zero";
+        Move bestMove = allMoves.get(rmd.nextInt(allMoves.size()));
         logger.info("Finished Evaluation - Best Move: (%d/%d) to (%d/%d) eval: %d".formatted(bestMove.xStart(), bestMove.yStart(), bestMove.xEnd(), bestMove.yEnd(), bestMoveEval));
         return bestMove;
-    }
-
-    private Move randomMove(int x, int y) {
-        ArrayList<Move> avaiableMoves = getAvaiableMoves(x, y);
-        return avaiableMoves.get(rmd.nextInt(avaiableMoves.size()));
-    }
-
-    private ArrayList<Move> getAvaiableMovesDirection(int x, int y, int xMultiplicator, int yMultiplicator) {
-        ArrayList<Move> moves = new ArrayList<>();
-        PlayerType p = field[x][y];
-
-        for (int i = 1; i < field.length; i++) {
-            if (x + i * xMultiplicator < 0 || x + i * xMultiplicator >= field.length || y + i * yMultiplicator < 0 || y + i * yMultiplicator >= field.length)
-                break;
-            if (field[x + i * xMultiplicator][y + i * yMultiplicator] == null) {
-                moves.add(Move.of(x, y, x + i * xMultiplicator, y + i * yMultiplicator));
-            } else {
-                if (x + (i + 1) * xMultiplicator >= 0 && x + (i + 1) * xMultiplicator < 8 && y + (i + 1) * yMultiplicator >= 0 && y + (i + 1) * yMultiplicator < 8 && field[x + (i + 1) * xMultiplicator][y + (i + 1) * yMultiplicator] == null && isEnemy(p, x + i * xMultiplicator, y + i * yMultiplicator)) {
-                    moves.add(Move.of(x, y, x + i * xMultiplicator + xMultiplicator, y + i * yMultiplicator + yMultiplicator, true));
-                }
-                break;
-            }
-        }
-        return moves;
     }
 
     boolean isEnemy(PlayerType type, int x, int y) {
@@ -156,7 +129,7 @@ public class CheckersGame implements Playable {
         if (isMaximizing) {
             int maxEval = Integer.MIN_VALUE;
             for (Move m : instance.getAllMoves(true)) {
-                int eval = minMax(instance.play(m), false, depth - 1, alpha, beta);
+                int eval = minMax(instance.play(m), m.knockout(), depth - 1, alpha, beta);
                 maxEval = Math.max(maxEval, eval);
                 alpha = Math.max(alpha, eval);
                 if (beta <= alpha) {
@@ -168,7 +141,7 @@ public class CheckersGame implements Playable {
 
         int minEval = Integer.MAX_VALUE;
         for (Move m : instance.getAllMoves(false)) {
-            int eval = minMax(instance.play(m), true, depth - 1, alpha, beta);
+            int eval = minMax(instance.play(m), !m.knockout(), depth - 1, alpha, beta);
             minEval = Math.min(minEval, eval);
             alpha = Math.min(alpha, eval);
             if (beta <= alpha) {
@@ -272,7 +245,7 @@ public class CheckersGame implements Playable {
             for (Move move : getAvaiableMoves(playerPos.x(), playerPos.y())) {
                 CheckersGame nextPlay = new CheckersGame(this).play(move);
                 int wins = 0;
-                for(int i = 0; i < 100; i++) {
+                for(int i = 0; i < 10; i++) {
                     wins += playGameRandom(whiteTurn, nextPlay);
                 }
                 if (bestMoveWins > wins) {
@@ -307,10 +280,11 @@ public class CheckersGame implements Playable {
         }
 
         ArrayList<Move> allMoves = instance.getAllMoves(whiteTurn);
-        if (allMoves.size() == 0) {
-            System.out.println(instance);
-            instance.getAllMoves(whiteTurn);
-        }
+        if (allMoves.size() == 0) 
+            if (whiteTurn) {
+                return -1;
+            } else 
+                return 1;
         Move move = allMoves.get(rmd.nextInt(allMoves.size()));
         return playGameRandom(!whiteTurn, instance.play(move));
     }

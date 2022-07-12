@@ -110,7 +110,10 @@ public class Board {
     }
 
     public void botPlay() {
-        Move botMove = backend.bestMove();
-        play(botMove);
+        Move botMove = null;
+        do {
+            botMove = backend.bestMove();
+            play(botMove);
+        } while(botMove.knockout());
     }
 }

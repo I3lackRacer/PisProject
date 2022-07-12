@@ -138,7 +138,8 @@ public class App extends PApplet {
                     logger.info("Moved player from (" + playMove.xStart() + "/" + playMove.yStart() + ") to ("
                             + playMove.xEnd() + "/" + playMove.yEnd() + ")");
                     if (playMove.knockout()) {
-                        logger.info("Knocked out an enemy with the last move");
+                        logger.info("Knocked out an enemy with the previous move");
+                        isWhiteTurn = !isWhiteTurn;
                     }
                     selected = null;
                     isWhiteTurn = !isWhiteTurn;
@@ -146,7 +147,7 @@ public class App extends PApplet {
                         winner = board.whoWon();
                         currentScreen = Screen.GAMEOVER;
                     }
-                    if (gameMode == GameMode.BOTGAME && currentScreen == Screen.GAME) {
+                    if (!isWhiteTurn && gameMode == GameMode.BOTGAME && currentScreen == Screen.GAME) {
                         loading = true;
                         draw();
                         board.botPlay();
