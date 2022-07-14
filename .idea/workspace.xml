@@ -5,12 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a953e154-e1fa-418c-8c8d-8a54ab0ec16b" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/CheckersGameForJShell.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/tombstone.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/game/PlayableTest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/REAME.docx" beforeDir="false" afterPath="$PROJECT_DIR$/REAME.docx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/game/App.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/game/App.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/game/Board.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/game/Board.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/game/CheckersGame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/game/CheckersGame.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/log4j2.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/log4j2.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/game/CheckersGameTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/game/CheckersGameTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -69,30 +70,39 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/racer/IdeaProjects/PisProject&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_ADD_EXTERNAL_FILES": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "last_opened_file_path": "C:/Users/racer/IdeaProjects/PisProject/src/main",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\racer\IdeaProjects\PisProject\src\main" />
+      <recent name="C:\Users\racer\IdeaProjects\PisProject\src\main\resources" />
+      <recent name="C:\Users\racer\IdeaProjects\PisProject\src\main\java" />
       <recent name="C:\Users\racer\IdeaProjects\PisProject" />
       <recent name="C:\Users\racer\IdeaProjects\PisProject\lib" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\racer\IdeaProjects\PisProject" />
+      <recent name="C:\Users\racer\IdeaProjects\PisProject\src\main\java\jshell" />
+      <recent name="C:\Users\racer\IdeaProjects\PisProject\src\jshell" />
       <recent name="C:\Users\racer\IdeaProjects\PisProject\src\main\resources" />
       <recent name="C:\Users\racer\IdeaProjects\PisProject\src\main\java\game" />
+    </key>
+    <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
+      <recent name="" />
     </key>
   </component>
   <component name="RunManager" selected="Application.App">
@@ -132,7 +142,7 @@
       <DebugAllEnabled>false</DebugAllEnabled>
       <method v="2" />
     </configuration>
-    <configuration name="CheckersGameTest.testGetKnockout" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+    <configuration name="CheckersGameTest.testMonteCarlo" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
@@ -145,7 +155,7 @@
           <list>
             <option value=":test" />
             <option value="--tests" />
-            <option value="&quot;game.CheckersGameTest.testGetKnockout&quot;" />
+            <option value="&quot;game.CheckersGameTest.testMonteCarlo&quot;" />
           </list>
         </option>
         <option name="vmOptions" />
@@ -155,7 +165,7 @@
       <DebugAllEnabled>false</DebugAllEnabled>
       <method v="2" />
     </configuration>
-    <configuration name="CheckersGameTest.testIsEnemy" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+    <configuration name="PlayableTest" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
@@ -168,7 +178,7 @@
           <list>
             <option value=":test" />
             <option value="--tests" />
-            <option value="&quot;game.CheckersGameTest.testIsEnemy&quot;" />
+            <option value="&quot;game.PlayableTest&quot;" />
           </list>
         </option>
         <option name="vmOptions" />
@@ -178,7 +188,7 @@
       <DebugAllEnabled>false</DebugAllEnabled>
       <method v="2" />
     </configuration>
-    <configuration name="CheckersGameTest.testQueenFiveFiveWithBlockedByEnemy" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+    <configuration name="PlayableTest.testInvalidPlayWithMissingPlayer" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
@@ -191,7 +201,7 @@
           <list>
             <option value=":test" />
             <option value="--tests" />
-            <option value="&quot;game.CheckersGameTest.testQueenFiveFiveWithBlockedByEnemy&quot;" />
+            <option value="&quot;game.PlayableTest.testInvalidPlayWithMissingPlayer&quot;" />
           </list>
         </option>
         <option name="vmOptions" />
@@ -203,11 +213,11 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Gradle.CheckersGameTest" />
         <item itemvalue="Application.App" />
-        <item itemvalue="Gradle.CheckersGameTest.testGetKnockout" />
-        <item itemvalue="Gradle.CheckersGameTest.testIsEnemy" />
-        <item itemvalue="Gradle.CheckersGameTest.testQueenFiveFiveWithBlockedByEnemy" />
+        <item itemvalue="Gradle.CheckersGameTest" />
+        <item itemvalue="Gradle.PlayableTest" />
+        <item itemvalue="Gradle.PlayableTest.testInvalidPlayWithMissingPlayer" />
+        <item itemvalue="Gradle.CheckersGameTest.testMonteCarlo" />
       </list>
     </recent_temporary>
   </component>
@@ -236,7 +246,7 @@
       <workItem from="1657656722489" duration="1696000" />
       <workItem from="1657668489982" duration="596000" />
       <workItem from="1657708566442" duration="8493000" />
-      <workItem from="1657800564043" duration="4245000" />
+      <workItem from="1657800564043" duration="20037000" />
     </task>
     <servers />
   </component>
@@ -252,8 +262,14 @@
         <breakpoint enabled="true" suspend="NONE" type="java-exception" />
       </default-breakpoints>
     </breakpoint-manager>
+    <watches-manager>
+      <configuration name="GradleRunConfiguration">
+        <watch expression="instance" />
+      </configuration>
+    </watches-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/PisProject$PlayableTest.ic" NAME="PlayableTest Coverage Results" MODIFIED="1657826154510" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
     <SUITE FILE_PATH="coverage/PisProject$CheckersGameTest_testIsEnemy.ic" NAME="CheckersGameTest.testIsEnemy Coverage Results" MODIFIED="1657459479229" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
     <SUITE FILE_PATH="coverage/PisProject$CheckersGameTest_testQueenFiveFiveWithBlockedByEnemy.ic" NAME="CheckersGameTest.testQueenFiveFiveWithBlockedByEnemy Coverage Results" MODIFIED="1657447225420" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
     <SUITE FILE_PATH="coverage/PisProject$App.ic" NAME="App Coverage Results" MODIFIED="1657467143471" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">

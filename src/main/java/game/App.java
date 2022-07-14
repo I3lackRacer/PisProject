@@ -14,6 +14,7 @@ public class App extends PApplet {
     private boolean loading = false;
 
     private PFont font;
+    private PImage tombstone;
     private PImage backgroundImage;
 
     public static void main(String[] args) {
@@ -26,7 +27,7 @@ public class App extends PApplet {
     private final Button startGame2PlayerButton = new Button("2 Player", 280, 100, 140, 50, true);
     private final Button startBotButton = new Button("Bot Game", 280, 200, 140, 50, true);
     private GameMode gameMode = GameMode.TWOPLAYER;
-    private final Button restartButton = new Button("Restart Game", 280, 300, 150, 50, true);
+    private final Button restartButton = new Button("Restart Game", 280, 260, 150, 50, true);
     private boolean isWhiteTurn;
     private PlayerType winner = null;
     private Player selected = null;
@@ -44,6 +45,7 @@ public class App extends PApplet {
         backgroundImage = loadImage("./src/main/resources/background.png");
         backgroundImage.resize(560, 560);
         font = createFont("./src/main/resources/font.ttf", 128);
+        tombstone = loadImage("./src/main/resources/tombstone.png");
     }
 
     @Override
@@ -79,11 +81,19 @@ public class App extends PApplet {
                 board.draw(this);
             }
             case GAMEOVER -> {
-                background(0);
+                background(255);
+                image(tombstone, 130, width / 2, 300, 300);
                 textAlign(CENTER);
-                color(100);
+                fill(0);
+                textSize(50);
                 text("GAME OVER", width / 2, 100);
-                text(winner.toString() + " WON!", width/ 2, 400);
+                text(winner.toString() + " WON!", width/ 2, 200);
+                String loser = "WHITE";
+                if (winner == PlayerType.WHITE) {
+                    loser = "BLACK";
+                }
+                textSize(20);
+                text(loser, width/ 2, 415);
                 restartButton.draw(this);
             }
         }
@@ -190,6 +200,8 @@ public class App extends PApplet {
     }
 
     private void restart() {
-
+        currentScreen = Screen.MENU;
+        board = new Board(new CheckersGame());
+        isWhiteTurn = true;
     }
 }

@@ -1,16 +1,58 @@
-package game;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+//import org.apache.logging.log4j.LogManager;
+//import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+record Move(int xStart, int yStart, int xEnd, int yEnd, boolean knockout) {
+
+    public static Move of(int xStart, int yStart, int xEnd, int yEnd, boolean knockout) {
+        return new Move(xStart, yStart, xEnd, yEnd, knockout);
+    }
+}
+
+record Location(int x, int y) {
+}
+enum PlayerType {
+    WHITE,
+    BLACK,
+    WHITE_QUEEN,
+    BLACK_QUEEN,
+}
+
+
+
+interface Playable {
+    Playable setupNewGame();
+
+    Playable setField(int x, int y, PlayerType type);
+
+    Location getKnockout(Move move);
+
+    ArrayList<Move> getAvaiableMoves(int x, int y);
+
+    Playable play(Move move);
+
+    PlayerType whoWon();
+
+    Move bestMove();
+
+    default boolean isGameOver() {
+        return whoWon() != null;
+    }
+
+    default Playable play(Move... move) {
+        Playable playable = this;
+        for (Move m : move) playable = playable.play(m);
+        return playable;
+    }
+}
+
 public class CheckersGame implements Playable {
 
     PlayerType[][] field = new PlayerType[8][8];
-    private static final Logger logger = LogManager.getLogger(CheckersGame.class);
+    //private static final Logger logger = LogManager.getLogger(CheckersGame.class);
     private static final Random rmd = new Random();
 
     public CheckersGame() {
@@ -18,7 +60,7 @@ public class CheckersGame implements Playable {
 
     public CheckersGame(CheckersGame game) {
         for (int x = 0; x < 8; x++) {
-            System.arraycopy(game.field[x], 0, field[x], 0, 8);
+            System.arraycopy(field[x], 0, field[x], 0, 8);
         }
     }
 
@@ -36,13 +78,12 @@ public class CheckersGame implements Playable {
             checkersGame.field[x][5] = PlayerType.WHITE;
             checkersGame.field[x][7] = PlayerType.WHITE;
         }
-        logger.info("Setup New Game as followed:\n" + checkersGame);
+//        logger.info("Setup New Game as followed:\n" + checkersGame);
         return checkersGame;
     }
 
     public ArrayList<Move> getAvaiableMoves(int x, int y) {
         assert x >= 0 && x < field.length && y >= 0 && y < field.length : "x and y must be between 0 and 7";
-        assert field[x][y] != null : "field should not be null";
         ArrayList<Move> moves = new ArrayList<>();
         PlayerType type = field[x][y];
         if (x > 0) {
@@ -82,11 +123,11 @@ public class CheckersGame implements Playable {
         ArrayList<Move> allMoves = getAllMoves(false);
         int bestMoveEval = Integer.MAX_VALUE;
         List<Move> bestMoves = new ArrayList<>();
-        logger.info("Started Evaluation");
+//        logger.info("Started Evaluation");
         for (Move m : allMoves) {
-            logger.debug("Evaluating move (%d/%d) to (%d/%d)".formatted(m.xStart(), m.yStart(), m.xEnd(), m.yEnd()));
-            int eval = minMax(this.play(m), false, 3, Integer.MIN_VALUE, Integer.MAX_VALUE);
-            logger.debug("Evaluated move: " + eval);
+//            logger.debug("Evaluating move (%d/%d) to (%d/%d)".formatted(m.xStart(), m.yStart(), m.xEnd(), m.yEnd()));
+            int eval = minMax(this.play(m), false, 5, Integer.MIN_VALUE, Integer.MAX_VALUE);
+//            logger.debug("Evaluated move: " + eval);
             if (bestMoveEval > eval) {
                 bestMoves.clear();
                 bestMoves.add(m);
@@ -95,12 +136,12 @@ public class CheckersGame implements Playable {
             if (bestMoveEval == eval) bestMoves.add(m);
         }
         assert bestMoves.size() != 0 : "Best Moves should never be zero";
-        Move bestMove = bestMoves.get(rmd.nextInt(bestMoves.size()));
+        Move bestMove = bestMoves.get(rmd.nextInt(allMoves.size()));
         if (bestMoves.stream().anyMatch(Move::knockout)) {
             bestMoves = bestMoves.stream().filter(Move::knockout).toList();
             bestMove = bestMoves.get(rmd.nextInt(bestMoves.size()));
         }
-        logger.info("Finished Evaluation - Best Move: (%d/%d) to (%d/%d) eval: %d".formatted(bestMove.xStart(), bestMove.yStart(), bestMove.xEnd(), bestMove.yEnd(), bestMoveEval));
+//        logger.info("Finished Evaluation - Best Move: (%d/%d) to (%d/%d) eval: %d".formatted(bestMove.xStart(), bestMove.yStart(), bestMove.xEnd(), bestMove.yEnd(), bestMoveEval));
         return bestMove;
     }
 
@@ -179,7 +220,7 @@ public class CheckersGame implements Playable {
         for (int offset = 1; offset < Math.abs(move.xStart() - move.xEnd()); offset++) {
             if (field[move.xStart() + offset * xDirection][move.yStart() + offset * yDirection] != null) {
                 // This log is spamming so I Removed it from the important log levels. But i still needed it in for debugging purposes. :)
-                logger.trace("Found knockout player for move (%d/%d) to (%d/%d) at (%d/%d)".formatted(move.xStart(), move.yStart(), move.xEnd(), move.yEnd(), move.xStart() + offset * xDirection, move.yStart() + offset * yDirection));
+//                logger.trace("Found knockout player for move (%d/%d) to (%d/%d) at (%d/%d)".formatted(move.xStart(), move.yStart(), move.xEnd(), move.yEnd(), move.xStart() + offset * xDirection, move.yStart() + offset * yDirection));
                 return new Location(move.xStart() + offset * xDirection, move.yStart() + offset * yDirection);
             }
         }
@@ -207,23 +248,23 @@ public class CheckersGame implements Playable {
     Move monteCarlo(boolean whiteTurn) {
         Move bestMove = null;
         int bestMoveWins = whiteTurn ? Integer.MIN_VALUE : Integer.MAX_VALUE;
-            for (Move move : getAllMoves(whiteTurn)) {
-                CheckersGame nextPlay = new CheckersGame(this).play(move);
-                int wins = 0;
-                for (int i = 0; i < 1; i++) {
-                    wins += playGameRandom(!whiteTurn, nextPlay);
-                }
-                if (whiteTurn && wins > bestMoveWins) {
-                    bestMoveWins = wins;
-                    bestMove = move;
-                }
-                if (!whiteTurn && wins < bestMoveWins) {
-                    bestMoveWins = wins;
-                    bestMove = move;
-                }
-                // This is for understanding the Monte carlo better but it is spamming so its on the trace level
-                logger.trace("Monte Carlo: Move (%d/%d) to (%d/%d) - wins: %d".formatted(move.xStart(), move.yStart(), move.xEnd(), move.yEnd(), wins));
+        for (Move move : getAllMoves(whiteTurn)) {
+            CheckersGame nextPlay = new CheckersGame(this).play(move);
+            int wins = 0;
+            for (int i = 0; i < 10; i++) {
+                wins += playGameRandom(!whiteTurn, nextPlay);
             }
+            if (whiteTurn && wins > bestMoveWins) {
+                bestMoveWins = wins;
+                bestMove = move;
+            }
+            if (!whiteTurn && wins < bestMoveWins) {
+                bestMoveWins = wins;
+                bestMove = move;
+            }
+//            logger.debug("Monte Carlo: Move (%d/%d) to (%d/%d) - wins: %d".formatted(move.xStart(), move.yStart(), move.xEnd(), move.yEnd(), wins));
+        }
+
         return bestMove;
     }
 
@@ -240,19 +281,14 @@ public class CheckersGame implements Playable {
     }
 
     private static int playGameRandom(boolean whiteTurn, CheckersGame instance) {
-        CheckersGame randomGameInstance = new CheckersGame(instance);
-        int moveCounter = 0;
-        while (randomGameInstance.whoWon() == null) {
-            if (moveCounter > 100) {
-                return 0;
-            }
-            moveCounter++;
-            ArrayList<Move> allMoves = randomGameInstance.getAllMoves(whiteTurn);
+        CheckersGame startPos = new CheckersGame(instance);
+        while (startPos.whoWon() == null) {
+            ArrayList<Move> allMoves = startPos.getAllMoves(whiteTurn);
             Move move = allMoves.get(rmd.nextInt(allMoves.size()));
-            randomGameInstance = randomGameInstance.play(move);
+            startPos = startPos.play(move);
             whiteTurn = !whiteTurn;
         }
-        if (randomGameInstance.whoWon() == PlayerType.WHITE) return 1;
+        if (startPos.whoWon() == PlayerType.WHITE) return 1;
         return -1;
     }
 
@@ -260,8 +296,8 @@ public class CheckersGame implements Playable {
     public String toString() {
         StringBuilder output = new StringBuilder(" -  -  -  -  -  -  -  -\n");
         for (int x = 0; x < field.length; x++) {
-            for (PlayerType[] playerTypes : field) {
-                PlayerType cell = playerTypes[x];
+            for (int y = 0; y < field.length; y++) {
+                PlayerType cell = field[y][x];
                 output.append("|");
                 if (cell == null) {
                     output.append(" ");
@@ -280,50 +316,5 @@ public class CheckersGame implements Playable {
         }
         output.append(" -  -  -  -  -  -  -  -\n");
         return output.toString();
-    }
-}
-
-record Location(int x, int y) {
-}
-
-enum PlayerType {
-    WHITE,
-    BLACK,
-    WHITE_QUEEN,
-    BLACK_QUEEN,
-}
-
-record Move(int xStart, int yStart, int xEnd, int yEnd, boolean knockout) {
-
-    public static Move of(int xStart, int yStart, int xEnd, int yEnd, boolean knockout) {
-        return new Move(xStart, yStart, xEnd, yEnd, knockout);
-    }
-}
-
-interface Playable {
-    Playable setupNewGame();
-
-    Playable setField(int x, int y, PlayerType type);
-
-    Location getKnockout(Move move);
-
-    ArrayList<Move> getAvaiableMoves(int x, int y);
-
-    Playable play(Move move);
-
-    PlayerType whoWon();
-
-    Move bestMove();
-
-    default boolean isGameOver() {
-        return whoWon() != null;
-    }
-
-    default Playable play(Move... move) {
-        Playable playable = this;
-        for (Move m : move) {
-            playable = playable.play(m);
-        }
-        return playable;
     }
 }
