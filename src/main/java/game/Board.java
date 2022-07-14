@@ -45,7 +45,6 @@ public class Board {
         p.move(move);
         gameField[move.xEnd()][move.yEnd()] = p;
         gameField[move.xStart()][move.yStart()] = null;
-        logger.debug(move.knockout());
         if (move.knockout()) {
             Location deadPlayerPos = backend.getKnockout(move);
             assert deadPlayerPos != null : "This should not happen";

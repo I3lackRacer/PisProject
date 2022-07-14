@@ -8,19 +8,16 @@
         <Console name="console" target="SYSTEM_OUT" follow="true">
             <PatternLayout pattern="${layout}"/>
         </Console>
-
         <File name="MyFile" fileName="C:/Users/Public/mylog.log" append="false">
             <PatternLayout pattern="${layout}"/>
         </File>
-
     </Appenders>
 
     <Loggers>
-
-        <Logger name="game" level="info" additivity="false" >
+        <Logger name="game" level="debug" additivity="false" >
             <AppenderRef ref="console" />
         </Logger>
-        <Root level="info">
+        <Root level="off">
             <AppenderRef ref="console" />
         </Root>
     </Loggers>

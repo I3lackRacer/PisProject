@@ -139,10 +139,11 @@ public class App extends PApplet {
                             + playMove.xEnd() + "/" + playMove.yEnd() + ")");
                     if (playMove.knockout()) {
                         logger.info("Knocked out an enemy with the previous move");
-                        isWhiteTurn = !isWhiteTurn;
+                        switchTurn();
+                        logger.info("Knockout in last move so player can play again");
                     }
                     selected = null;
-                    isWhiteTurn = !isWhiteTurn;
+                    switchTurn();
                     if (board.isGameOver()) {
                         winner = board.whoWon();
                         currentScreen = Screen.GAMEOVER;
@@ -156,7 +157,7 @@ public class App extends PApplet {
                             winner = board.whoWon();
                             currentScreen = Screen.GAMEOVER;
                         }
-                        isWhiteTurn = !isWhiteTurn;
+                        switchTurn();
                     }
                 } else {
                     Player p = board.getPlayer(x, y);
@@ -177,6 +178,15 @@ public class App extends PApplet {
                 }
             }
         }
+    }
+
+    private void switchTurn() {
+        isWhiteTurn = !isWhiteTurn;
+        String playerName = "Black";
+        if (isWhiteTurn) {
+            playerName = "White";
+        }
+        logger.info("Is %s's turn.".formatted(playerName));
     }
 
     private void restart() {

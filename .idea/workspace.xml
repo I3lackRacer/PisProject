@@ -5,17 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a953e154-e1fa-418c-8c8d-8a54ab0ec16b" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/resources/background.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/font.ttf" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/REAME.docx" beforeDir="false" afterPath="$PROJECT_DIR$/REAME.docx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/game/App.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/game/App.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/game/Board.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/game/Board.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/game/Button.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/game/Button.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/game/CheckersGame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/game/CheckersGame.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/log4j2.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/log4j2.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/game/CheckersGameTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/game/CheckersGameTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/~$REAME.docx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/log4j2.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/log4j2.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -114,6 +109,29 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="CheckersGameTest" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value=":test" />
+            <option value="--tests" />
+            <option value="&quot;game.CheckersGameTest&quot;" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <method v="2" />
+    </configuration>
     <configuration name="CheckersGameTest.testGetKnockout" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
@@ -160,29 +178,6 @@
       <DebugAllEnabled>false</DebugAllEnabled>
       <method v="2" />
     </configuration>
-    <configuration name="CheckersGameTest.testQueen (1)" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
-      <ExternalSystemSettings>
-        <option name="executionName" />
-        <option name="externalProjectPath" value="$PROJECT_DIR$" />
-        <option name="externalSystemIdString" value="GRADLE" />
-        <option name="scriptParameters" value="" />
-        <option name="taskDescriptions">
-          <list />
-        </option>
-        <option name="taskNames">
-          <list>
-            <option value=":test" />
-            <option value="--tests" />
-            <option value="&quot;game.CheckersGameTest.testQueen&quot;" />
-          </list>
-        </option>
-        <option name="vmOptions" />
-      </ExternalSystemSettings>
-      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
-      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
-      <DebugAllEnabled>false</DebugAllEnabled>
-      <method v="2" />
-    </configuration>
     <configuration name="CheckersGameTest.testQueenFiveFiveWithBlockedByEnemy" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
@@ -208,11 +203,11 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Gradle.CheckersGameTest" />
         <item itemvalue="Application.App" />
         <item itemvalue="Gradle.CheckersGameTest.testGetKnockout" />
         <item itemvalue="Gradle.CheckersGameTest.testIsEnemy" />
         <item itemvalue="Gradle.CheckersGameTest.testQueenFiveFiveWithBlockedByEnemy" />
-        <item itemvalue="Gradle.CheckersGameTest.testQueen (1)" />
       </list>
     </recent_temporary>
   </component>
@@ -235,7 +230,13 @@
       <workItem from="1657442583510" duration="7901000" />
       <workItem from="1657466058012" duration="5642000" />
       <workItem from="1657483036097" duration="1168000" />
-      <workItem from="1657551529200" duration="9562000" />
+      <workItem from="1657551529200" duration="9611000" />
+      <workItem from="1657572610578" duration="245000" />
+      <workItem from="1657655324146" duration="22000" />
+      <workItem from="1657656722489" duration="1696000" />
+      <workItem from="1657668489982" duration="596000" />
+      <workItem from="1657708566442" duration="8493000" />
+      <workItem from="1657800564043" duration="4245000" />
     </task>
     <servers />
   </component>
@@ -247,13 +248,6 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/game/CheckersGame.java</url>
-          <line>310</line>
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
-      </breakpoints>
       <default-breakpoints>
         <breakpoint enabled="true" suspend="NONE" type="java-exception" />
       </default-breakpoints>

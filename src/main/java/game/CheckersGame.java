@@ -36,6 +36,7 @@ public class CheckersGame implements Playable {
             checkersGame.field[x][5] = PlayerType.WHITE;
             checkersGame.field[x][7] = PlayerType.WHITE;
         }
+        logger.info("Setup New Game as followed:\n" + checkersGame);
         return checkersGame;
     }
 
@@ -46,41 +47,29 @@ public class CheckersGame implements Playable {
         if (x > 0) {
             if (y > 0 && type != PlayerType.BLACK) {
                 PlayerType corner = field[x - 1][y - 1];
-                if (corner == null) {
-                    moves.add(Move.of(x, y, x - 1, y - 1));
-                }
-                if (isEnemy(type, x - 1, y - 1) && x > 1 && y >= 2 && field[x - 2][y - 2] == null) {
+                if (corner == null) moves.add(Move.of(x, y, x - 1, y - 1, false));
+                if (isEnemy(type, x - 1, y - 1) && x > 1 && y >= 2 && field[x - 2][y - 2] == null)
                     moves.add(Move.of(x, y, x - 2, y - 2, true));
-                }
             }
             if (y < 7 &&type != PlayerType.WHITE) {
                 PlayerType corner = field[x - 1][y + 1];
-                if (corner == null) {
-                    moves.add(Move.of(x, y, x - 1, y + 1));
-                }
-                if (isEnemy(type, x - 1, y + 1) && x > 1 && y < 6 && field[x - 2][y + 2] == null) {
+                if (corner == null) moves.add(Move.of(x, y, x - 1, y + 1, false));
+                if (isEnemy(type, x - 1, y + 1) && x > 1 && y < 6 && field[x - 2][y + 2] == null)
                     moves.add(Move.of(x, y, x - 2, y + 2, true));
-                }
             }
         }
         if (x < 7) {
             if (y > 0 && type != PlayerType.BLACK) {
                 PlayerType corner = field[x + 1][y - 1];
-                if (corner == null) {
-                    moves.add(Move.of(x, y, x + 1, y - 1));
-                }
-                if (isEnemy(type, x + 1, y - 1) && x < 6 && y >= 2 && field[x + 2][y - 2] == null) {
+                if (corner == null) moves.add(Move.of(x, y, x + 1, y - 1, false));
+                if (isEnemy(type, x + 1, y - 1) && x < 6 && y >= 2 && field[x + 2][y - 2] == null)
                     moves.add(Move.of(x, y, x + 2, y - 2, true));
-                }
             }
             if (y < 7 && type != PlayerType.WHITE) {
                 PlayerType corner = field[x + 1][y + 1];
-                if (corner == null) {
-                    moves.add(Move.of(x, y, x + 1, y + 1));
-                }
-                if (isEnemy(type, x + 1, y + 1) && x < 6 && y < 6 && field[x + 2][y + 2] == null) {
+                if (corner == null) moves.add(Move.of(x, y, x + 1, y + 1, false));
+                if (isEnemy(type, x + 1, y + 1) && x < 6 && y < 6 && field[x + 2][y + 2] == null)
                     moves.add(Move.of(x, y, x + 2, y + 2, true));
-                }
             }
         }
         return moves;
@@ -88,29 +77,26 @@ public class CheckersGame implements Playable {
 
     @Override
     public Move bestMove() {
-        if (whoWon() != null) {
-            return null;
-        }
+        if (whoWon() != null) return null;
         ArrayList<Move> allMoves = getAllMoves(false);
         int bestMoveEval = Integer.MAX_VALUE;
-        List<Move> bestMoves = new ArrayList<Move>();
+        List<Move> bestMoves = new ArrayList<>();
         logger.info("Started Evaluation");
         for (Move m: allMoves) {
-            logger.info("Evaluating move (%d/%d) to (%d/%d)".formatted(m.xStart(), m.yStart(), m.xEnd(), m.yEnd()));
+            logger.debug("Evaluating move (%d/%d) to (%d/%d)".formatted(m.xStart(), m.yStart(), m.xEnd(), m.yEnd()));
             int eval = minMax(this.play(m), false, 5, Integer.MIN_VALUE, Integer.MAX_VALUE);
-            logger.info("Evaluated move: " + eval);
+            logger.debug("Evaluated move: " + eval);
             if (bestMoveEval > eval) {
                 bestMoves.clear();
                 bestMoves.add(m);
                 bestMoveEval = eval;
-            } if (bestMoveEval == eval) {
-                bestMoves.add(m);
             }
+            if (bestMoveEval == eval) bestMoves.add(m);
         }
         assert bestMoves.size() != 0: "Best Moves should never be zero";
         Move bestMove = bestMoves.get(rmd.nextInt(allMoves.size()));
-        if (bestMoves.stream().anyMatch((move) -> move.knockout())) {
-            bestMoves = bestMoves.stream().filter((move) -> move.knockout()).toList();
+        if (bestMoves.stream().anyMatch(Move::knockout)) {
+            bestMoves = bestMoves.stream().filter(Move::knockout).toList();
             bestMove = bestMoves.get(rmd.nextInt(bestMoves.size()));
         }
         logger.info("Finished Evaluation - Best Move: (%d/%d) to (%d/%d) eval: %d".formatted(bestMove.xStart(), bestMove.yStart(), bestMove.xEnd(), bestMove.yEnd(), bestMoveEval));
@@ -124,22 +110,15 @@ public class CheckersGame implements Playable {
     }
     
     private static int minMax(CheckersGame instance, boolean isMaximizing, int depth, int alpha, int beta) {
-        if (instance.whoWon() != null) {
-            return instance.evaluateBoard();
-        }
-        if (depth == 0) {
-            return instance.play(instance.monteCarlo(isMaximizing)).evaluateBoard();
-        }
-
+        if (instance.whoWon() != null) return instance.evaluateBoard();
+        if (depth == 0) return instance.play(instance.monteCarlo(isMaximizing)).evaluateBoard();
         if (isMaximizing) {
             int maxEval = Integer.MIN_VALUE;
             for (Move m : instance.getAllMoves(true)) {
                 int eval = minMax(instance.play(m), m.knockout(), depth - 1, alpha, beta);
                 maxEval = Math.max(maxEval, eval);
                 alpha = Math.max(alpha, eval);
-                if (beta <= alpha) {
-                    break;
-                }
+                if (beta <= alpha) break;
             }
             return maxEval;
         }
@@ -149,9 +128,7 @@ public class CheckersGame implements Playable {
             int eval = minMax(instance.play(m), !m.knockout(), depth - 1, alpha, beta);
             minEval = Math.min(minEval, eval);
             alpha = Math.min(alpha, eval);
-            if (beta <= alpha) {
-                break;
-            }
+            if (beta <= alpha) break;
         }
         return minEval;
     }
@@ -180,12 +157,10 @@ public class CheckersGame implements Playable {
             Location knockout = newGame.getKnockout(move);
             newGame = newGame.setField(knockout.x(), knockout.y(), null);
         }
-        if(player == PlayerType.WHITE && move.yEnd() == 0) {
+        if(player == PlayerType.WHITE && move.yEnd() == 0)
             newGame.field[move.xEnd()][move.yEnd()] = PlayerType.WHITE_QUEEN;
-        }
-        if (player == PlayerType.BLACK && move.yEnd() == 7) {
+        if (player == PlayerType.BLACK && move.yEnd() == 7)
             newGame.field[move.xEnd()][move.yEnd()] = PlayerType.BLACK_QUEEN;
-        }
         return newGame;
     }
 
@@ -196,7 +171,8 @@ public class CheckersGame implements Playable {
         int yDirection = move.yStart() > move.yEnd() ? -1 : 1;
         for (int offset = 1; offset < Math.abs(move.xStart() - move.xEnd()); offset++) {
             if (field[move.xStart() + offset * xDirection][move.yStart() + offset * yDirection] != null) {
-                logger.debug("Found knockout player for move (%d/%d) to (%d/%d) at (%d/%d)".formatted( move.xStart(), move.yStart(), move.xEnd(), move.yEnd(), move.xStart() + offset * xDirection, move.yStart() + offset * yDirection));
+                // This log is spamming so I Removed it from the important log levels. But i still needed it in for debugging purposes. :)
+                logger.trace("Found knockout player for move (%d/%d) to (%d/%d) at (%d/%d)".formatted( move.xStart(), move.yStart(), move.xEnd(), move.yEnd(), move.xStart() + offset * xDirection, move.yStart() + offset * yDirection));
                 return new Location(move.xStart() + offset * xDirection, move.yStart() + offset * yDirection);
             }
         }
@@ -223,12 +199,8 @@ public class CheckersGame implements Playable {
                 else if (cell == PlayerType.WHITE || cell == PlayerType.WHITE_QUEEN)
                     whitePlayers = true;
             }
-        if (!blackPlayers) {
-            return PlayerType.WHITE;
-        }
-        if (!whitePlayers) {
-            return PlayerType.BLACK;
-        }
+        if (!blackPlayers) return PlayerType.WHITE;
+        if (!whitePlayers) return PlayerType.BLACK;
 
         return null;
     }
@@ -237,11 +209,10 @@ public class CheckersGame implements Playable {
         ArrayList<Location> playersPos = new ArrayList<>();
         for (int x = 0; x < field.length; x++) {
             for(int y = 0; y < field.length; y++) {
-                if (whiteTurn && (field[x][y] == PlayerType.WHITE || field[x][y] == PlayerType.WHITE_QUEEN)) {
+                if (whiteTurn && (field[x][y] == PlayerType.WHITE || field[x][y] == PlayerType.WHITE_QUEEN))
                     playersPos.add(new Location(x, y));
-                } else if (!whiteTurn && (field[x][y] == PlayerType.BLACK || field[x][y] == PlayerType.BLACK_QUEEN)) {
+                else if (!whiteTurn && (field[x][y] == PlayerType.BLACK || field[x][y] == PlayerType.BLACK_QUEEN))
                     playersPos.add(new Location(x, y));
-                }
             }
         }
         Move bestMove = null;
@@ -250,9 +221,7 @@ public class CheckersGame implements Playable {
             for (Move move : getAvaiableMoves(playerPos.x(), playerPos.y())) {
                 CheckersGame nextPlay = new CheckersGame(this).play(move);
                 int wins = 0;
-                for(int i = 0; i < 10; i++) {
-                    wins += playGameRandom(whiteTurn, nextPlay);
-                }
+                for(int i = 0; i < 10; i++) wins += playGameRandom(whiteTurn, nextPlay);
                 if (bestMoveWins > wins) {
                     bestMoveWins = wins;
                     bestMove = move;
@@ -268,9 +237,8 @@ public class CheckersGame implements Playable {
         for (int x = 0; x < field.length; x++) {
             for(int y = 0; y < field.length; y++) {
                 if (field[x][y] != null)
-                    if (whiteTurn && !isEnemy(PlayerType.WHITE, x, y) || (!whiteTurn && !isEnemy(PlayerType.BLACK, x, y))) {
+                    if (whiteTurn && !isEnemy(PlayerType.WHITE, x, y) || (!whiteTurn && !isEnemy(PlayerType.BLACK, x, y)))
                         moves.addAll(getAvaiableMoves(x, y));
-                    }
             }
         }
         return moves;
@@ -280,44 +248,36 @@ public class CheckersGame implements Playable {
         while(instance.whoWon() != null) {
             ArrayList<Move> allMoves = instance.getAllMoves(whiteTurn);
             if (allMoves.size() == 0) 
-                if (whiteTurn) {
-                    return -1;
-                } else 
-                    return 1;
+                if (whiteTurn) return -1;
+                else return 1;
             Move move = allMoves.get(rmd.nextInt(allMoves.size()));
             whiteTurn = !whiteTurn;
             instance = instance.play(move);
         }
-        if (whiteTurn && instance.whoWon() == PlayerType.BLACK || !whiteTurn && instance.whoWon() == PlayerType.WHITE) {
+        if (whiteTurn && instance.whoWon() == PlayerType.BLACK || !whiteTurn && instance.whoWon() == PlayerType.WHITE)
             return -1;
-        } 
         return 1;
    }
 
     @Override
     public String toString() {
         StringBuilder output = new StringBuilder(" -  -  -  -  -  -  -  -\n");
-        for (PlayerType[] row : field) {
-            for (PlayerType cell : row) {
+        for (int x = 0; x < field.length; x++) {
+            for (int y = 0; y < field.length; y++) {
+                PlayerType cell = field[y][x];
+                output.append("|");
                 if (cell == null) {
-                    output.append("   ");
-                    continue;
+                    output.append(" ");
+                } else {
+                    switch (cell) {
+                        case BLACK -> output.append("o");
+                        case WHITE -> output.append("x");
+                        case WHITE_QUEEN -> output.append("X");
+                        case BLACK_QUEEN -> output.append("O");
+                        default -> output.append(" ");
+                    }
                 }
-                switch (cell) {
-                    case BLACK:
-                        output.append(" o ");
-                        break;
-                    case WHITE:
-                        output.append(" x ");
-                        break;
-                    case WHITE_QUEEN:
-                        output.append(" X ");
-                    case BLACK_QUEEN:
-                        output.append(" O ");
-                    default:
-                        output.append("   ");
-                        break;
-                }
+                output.append("|");
             }
             output.append("\n");
         }
@@ -341,10 +301,6 @@ record Move(int xStart, int yStart, int xEnd, int yEnd, boolean knockout) {
     public static Move of(int xStart, int yStart, int xEnd, int yEnd, boolean knockout) {
         return new Move(xStart, yStart, xEnd, yEnd, knockout);
     }
-
-    public static Move of(int xStart, int yStart, int xEnd, int yEnd) {
-        return new Move(xStart, yStart, xEnd, yEnd, false);
-    }
 }
 
 interface Playable {
@@ -362,9 +318,7 @@ interface Playable {
 
     default Playable play(Move... move) {
         Playable playable = this;
-        for (Move m: move) {
-            playable = playable.play(m);
-        }
+        for (Move m: move) playable = playable.play(m);
         return playable;
     }
 }
