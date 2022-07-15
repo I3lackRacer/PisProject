@@ -5,12 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a953e154-e1fa-418c-8c8d-8a54ab0ec16b" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/CheckersGameForJShell.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/tombstone.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/game/PlayableTest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/game/App.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/game/App.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/game/CheckersGame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/game/CheckersGame.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CheckersGameForJShell.java" beforeDir="false" afterPath="$PROJECT_DIR$/CheckersGameForJShell.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/java/game/CheckersGameTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/game/CheckersGameTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -246,7 +242,7 @@
       <workItem from="1657656722489" duration="1696000" />
       <workItem from="1657668489982" duration="596000" />
       <workItem from="1657708566442" duration="8493000" />
-      <workItem from="1657800564043" duration="20037000" />
+      <workItem from="1657800564043" duration="24354000" />
     </task>
     <servers />
   </component>
